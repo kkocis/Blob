@@ -45,6 +45,13 @@ sim.addShape(poly)
 makeRobot("SimScribbler", sim)
 sim.setPose(0, width/2, height/2, 0)
 
+
+def textSetup(text):
+    p = (100,100)
+    text = Text(p, user_choice) 
+    sim.addShape(text)
+    
+
 sim.setup()
 
 # 1-RED
@@ -150,7 +157,7 @@ def moveToBlob(color):
             pic = takePicture() #take picture, print (findColorSpot)
             #show(pic)
             avg = findColorSpot(pic, color)
-            print(avg)
+            print(avg)  
             #wait(.5)
             if avg > (256/2)+10: #if the colored pixels are right of center (20 pixels wide), turn 3 degrees left
                 turnBy(-3)
@@ -176,11 +183,16 @@ while stopped == 0:
     if user_choice == "Stop":
         stopped = 1
     elif user_choice == "Rand":
-        moveToBlob(randrange(1, 4))
+        int_choice =randrange(1, 4)
     else:
         int_choice = int(user_choice)
-
-        moveToBlob(int_choice)
+    
+    p = (230,50)
+    text = Text(p, "Searching for: " + user_choice + " blob.") 
+    #sim.remove(text)
+    sim.addText(text)
+    
+    moveToBlob(int_choice)
 
 
 
