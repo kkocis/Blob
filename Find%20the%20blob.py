@@ -138,6 +138,8 @@ def moveToBlob(color):
             if (avg == -1): #if avg=-1, robot is touching the blob
                 onColor = 1
 
+    if onColor == 1:
+        speak('blob found.')
 
 user_choice = raw_input("Please put color choice here. 1 = red, 2 = green, 3 = blue, 4 = yellow.")
 int_choice = int(user_choice)
