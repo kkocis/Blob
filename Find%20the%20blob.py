@@ -83,7 +83,7 @@ def findColorSpot(picture, color):
 
     #Handles the case where robot has found the spot if it is near it
     #If necessary adjust the value
-    if(totalPixelNum/(getWidth(picture)*getHeight(picture)) > 0.21):
+    if(totalPixelNum/(getWidth(picture)*getHeight(picture)) > 0.5): #Changed from 0.21 to 0.5 to make robot actually touch blob
         averageXPixel = -1
 
     return averageXPixel
@@ -99,44 +99,45 @@ def findColorSpot(picture, color):
 
 def moveToBlob(color):
     colorFound = 0
-    while colorFound == 0:
+    while colorFound == 0: #while color found=0 repeat the process to get desired pixels in the field of view
         turnBy(30)
         pic = takePicture()
         #show(pic)
         avg = findColorSpot(pic, color)
-        print(findColorSpot(pic, color))
-        wait(.5)
+        print(avg)
+        wait(.2)
         if avg >20:
-            colorFound =1
+            colorFound =1   #when the desired colored pictures in the field of view, set color found to 1
         else:
             colorFound = 0
 
-    colorCenter = 0
+    colorCenter = 0         #if desired color is found in the field of view, set colorCenter=0
     if colorFound ==1:
     
-        while colorCenter == 0:
-            pic = takePicture()
+        while colorCenter == 0:     #while colorCenter=0 (desired pixels are in field of view)
+            pic = takePicture()     #take picture, print (findColorSpot)
             #show(pic)
             avg = findColorSpot(pic, color)
             print(avg)
-            wait(.5)
-            if avg > (256/2)+10:
+            wait(.2)
+            if avg > (256/2)+10:    #if the colored pixels are right of center (20 pixels wide), turn 3 degrees left
                 turnBy(-3)
-            elif avg < (256/2)-10:
+            elif avg < (256/2)-10:  #if the colored pixels are left of center (20 pixels wide), turn 3 degrees right
                 turnBy(3)
-            elif avg > (256/2)-10 and avg < (256/2)+10:
+            elif avg > (256/2)-10 and avg < (256/2)+10: #if the colored pixels are in the center of field of view, set colorCenter=1
                 colorCenter = 1
 
-    if colorCenter == 1:
-        onColor = 0
+    if colorCenter == 1: #if colored pixels are centered
+        onColor = 0     #set onColor=0 (you are not touching the blob)
         while onColor == 0:
-            forward(1,.3)
+            forward(1,.3)   #move forward, take a picture, print (findColorSpot)
             pic = takePicture()
             #show(pic)
             avg = findColorSpot(pic, color)
             print(avg)
-            if (avg == -1):
+            if (avg == -1): #if avg=-1, robot is touching the blob
                 onColor = 1
+
 
 user_choice = raw_input("Please put color choice here. 1 = red, 2 = green, 3 = blue, 4 = yellow.")
 int_choice = int(user_choice)
