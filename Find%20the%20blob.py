@@ -108,7 +108,6 @@ def moveToBlob(color):
         
         avg = findColorSpot(pic, color)
         print(findColorSpot(pic, color))
-        #wait(.5)
         if avg >20:
             colorFound =1  #when the desired colored pictures in the field of view, set color found to 1
         else:
@@ -120,7 +119,7 @@ def moveToBlob(color):
             forward(1,3)
             pic = takePicture()
             avg = findColorSpot(pic, color)
-            print(findColorSpot(pic, color))
+            print(avg)
             if avg >20:
                 colorFound =1  #when the desired colored pictures in the field of view, set color found to 1
             else:
@@ -148,10 +147,8 @@ def moveToBlob(color):
     
         while colorCenter == 0: #while colorCenter=0 (desired pixels are in field of view)
             pic = takePicture() #take picture, print (findColorSpot)
-            #show(pic)
             avg = findColorSpot(pic, color)
             print(avg)
-            #wait(.5)
             if avg > (256/2)+10: #if the colored pixels are right of center (20 pixels wide), turn 3 degrees left
                 turnBy(-3)
             elif avg < (256/2)-10: #if the colored pixels are left of center (20 pixels wide), turn 3 degrees right
@@ -164,22 +161,20 @@ def moveToBlob(color):
         while onColor == 0:
             forward(1,.3) #move forward, take a picture, print (findColorSpot)
             pic = takePicture()
-            #show(pic)
             avg = findColorSpot(pic, color) 
-            print(avg) #if avg=-1, robot is touching the blob
-            if (avg == -1):
+            print(avg)
+            if (avg == -1): #if avg=-1, robot is touching the blob
                 onColor = 1
 
 stopped = 0
 while stopped == 0:
-    user_choice = raw_input("Please put color choice here. 1 = red, 2 = green, 3 = blue, 4 = yellow, 'Rand' = random, or type 'Stop' to stop")
-    if user_choice == "Stop":
+    user_choice = raw_input("Please put color choice here. 1 = red, 2 = green, 3 = blue, 4 = yellow, 'rand' or 'r' = random, or type 'stop' to stop")
+    if user_choice == "stop":
         stopped = 1
-    elif user_choice == "Rand":
+    elif user_choice == "rand" or 'r':
         moveToBlob(randrange(1, 4))
     else:
         int_choice = int(user_choice)
-
         moveToBlob(int_choice)
 
 
