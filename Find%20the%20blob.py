@@ -45,6 +45,13 @@ sim.addShape(poly)
 makeRobot("SimScribbler", sim)
 sim.setPose(0, width/2, height/2, 0)
 
+
+def textSetup(text):
+    p = (100,100)
+    text = Text(p, user_choice) 
+    sim.addShape(text)
+    
+
 sim.setup()
 
 # 1-RED
@@ -171,11 +178,17 @@ while stopped == 0:
     user_choice = raw_input("Please put color choice here. 1 = red, 2 = green, 3 = blue, 4 = yellow, 'rand' or 'r' = random, or type 'stop' to stop")
     if user_choice == "stop":
         stopped = 1
-    elif user_choice == "rand" or 'r':
-        moveToBlob(randrange(1, 4))
+    elif user_choice == "Rand" or "r":
+        int_choice =randrange(1, 4)
     else:
         int_choice = int(user_choice)
-        moveToBlob(int_choice)
+    
+    p = (230,50)
+    text = Text(p, "Searching for: " + user_choice + " blob.") 
+    #sim.remove(text)
+    sim.addText(text)
+    
+    moveToBlob(int_choice)
 
 
 
