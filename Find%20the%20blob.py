@@ -64,17 +64,17 @@ def findColorSpot(picture, color):
     show(picture)
 
     for pixel in getPixels(picture):
-        if(color == 1 and getRed(pixel) > 200 and getGreen(pixel) == 0 and getBlue(pixel) == 0):
+        if(color == 1 and getRed(pixel) > 150 and getGreen(pixel) < 50 and getBlue(pixel) < 50):
             xPixelSum += getX(pixel)
             totalPixelNum += 1
-        elif(color == 2 and getRed(pixel)== 0 and getGreen(pixel) > 100 and getBlue(pixel) == 0):
+        elif(color == 2 and getRed(pixel) < 50 and getGreen(pixel) > 100 and getBlue(pixel) < 50):
             xPixelSum += getX(pixel)
             totalPixelNum += 1
-        elif(color == 3 and getRed(pixel) == 0 and getGreen(pixel) == 0 and getBlue(pixel) > 200):
+        elif(color == 3 and getRed(pixel) < 50 and getGreen(pixel) < 50  and getBlue(pixel) > 150):
           
             xPixelSum += getX(pixel)
             totalPixelNum += 1
-        elif(color == 4 and getRed(pixel) > 200 and getGreen(pixel) > 200 and getBlue(pixel) == 0):
+        elif(color == 4 and getRed(pixel) > 200 and getGreen(pixel) > 150 and getBlue(pixel) < 50):
             
             xPixelSum += getX(pixel)
             totalPixelNum += 1
@@ -83,7 +83,7 @@ def findColorSpot(picture, color):
 
     #Handles the case where robot has found the spot if it is near it
     #If necessary adjust the value
-    if(totalPixelNum/(getWidth(picture)*getHeight(picture)) > 0.5): #Changed from 0.21 to 0.5 to make robot actually touch blob
+    if(totalPixelNum/(getWidth(picture)*getHeight(picture)) > 0.21):
         averageXPixel = -1
 
     return averageXPixel
@@ -99,54 +99,88 @@ def findColorSpot(picture, color):
 
 def moveToBlob(color):
     colorFound = 0
+    a = 0
     while colorFound == 0: #while color found=0 repeat the process to get desired pixels in the field of view
-        turnBy(30)
+        
+        turnBy(45)
         pic = takePicture()
         #show(pic)
+        
         avg = findColorSpot(pic, color)
-        print(avg)
-        wait(.2)
+        print(findColorSpot(pic, color))
+        #wait(.5)
         if avg >20:
-            colorFound =1   #when the desired colored pictures in the field of view, set color found to 1
+            colorFound =1  #when the desired colored pictures in the field of view, set color found to 1
         else:
             colorFound = 0
+            
+        a+=1
+        if (a == 8): # If spins around fully and does not find block, start searching.
+            turnBy(180)
+            forward(1,3)
+            pic = takePicture()
+            avg = findColorSpot(pic, color)
+            print(findColorSpot(pic, color))
+            if avg >20:
+                colorFound =1  #when the desired colored pictures in the field of view, set color found to 1
+            else:
+                colorFound = 0
+            while avg == 0: 
+                b = 0
+                turnBy(randrange(-1,2)*30)
+                forward (randrange(-1,2),randrange(0, 3))
+                pic = takePicture()
+                avg = findColorSpot(pic, color)
+                print(findColorSpot(pic, color))
+                b+=1
+                if avg >20:
+                    colorFound =1  #when the desired colored pictures in the field of view, set color found to 1
+                else:
+                    colorFound = 0
+                if b == 12:
+                    forward(1,1)
+                    b = 0
+            
+            a=0
 
-    colorCenter = 0         #if desired color is found in the field of view, set colorCenter=0
+    colorCenter = 0
     if colorFound ==1:
     
-        while colorCenter == 0:     #while colorCenter=0 (desired pixels are in field of view)
-            pic = takePicture()     #take picture, print (findColorSpot)
+        while colorCenter == 0: #while colorCenter=0 (desired pixels are in field of view)
+            pic = takePicture() #take picture, print (findColorSpot)
             #show(pic)
             avg = findColorSpot(pic, color)
             print(avg)
-            wait(.2)
-            if avg > (256/2)+10:    #if the colored pixels are right of center (20 pixels wide), turn 3 degrees left
+            #wait(.5)
+            if avg > (256/2)+10: #if the colored pixels are right of center (20 pixels wide), turn 3 degrees left
                 turnBy(-3)
-            elif avg < (256/2)-10:  #if the colored pixels are left of center (20 pixels wide), turn 3 degrees right
+            elif avg < (256/2)-10: #if the colored pixels are left of center (20 pixels wide), turn 3 degrees right
                 turnBy(3)
             elif avg > (256/2)-10 and avg < (256/2)+10: #if the colored pixels are in the center of field of view, set colorCenter=1
                 colorCenter = 1
 
     if colorCenter == 1: #if colored pixels are centered
-        onColor = 0     #set onColor=0 (you are not touching the blob)
+        onColor = 0 #set onColor=0 (you are not touching the blob)
         while onColor == 0:
-            forward(1,.3)   #move forward, take a picture, print (findColorSpot)
+            forward(1,.3) #move forward, take a picture, print (findColorSpot)
             pic = takePicture()
             #show(pic)
-            avg = findColorSpot(pic, color)
-            print(avg)
-            if (avg == -1): #if avg=-1, robot is touching the blob
+            avg = findColorSpot(pic, color) 
+            print(avg) #if avg=-1, robot is touching the blob
+            if (avg == -1):
                 onColor = 1
-                
 
-    if onColor == 1: #I think theres a problem with the onColor function (I don't thing findColorSpot is ever reaching -1, which could be the problem)
-        stop()
-        speak('blob found.')
+stopped = 0
+while stopped == 0:
+    user_choice = raw_input("Please put color choice here. 1 = red, 2 = green, 3 = blue, 4 = yellow, 'Rand' = random, or type 'Stop' to stop")
+    if user_choice == "Stop":
+        stopped = 1
+    elif user_choice == "Rand":
+        moveToBlob(randrange(1, 4))
+    else:
+        int_choice = int(user_choice)
 
-user_choice = raw_input("Please put color choice here. 1 = red, 2 = green, 3 = blue, 4 = yellow.")
-int_choice = int(user_choice)
-
-moveToBlob(int_choice)
+        moveToBlob(int_choice)
 
 
 
