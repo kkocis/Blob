@@ -6,6 +6,7 @@ from random import *
 width = 500
 height = 500
 sim = Simulation("Maze World", width, height, Color("gray"))
+win = Window("My Window", 500, 400)
 
 #outside walls
 sim.addWall((10, 10), (490, 20), Color("black"))
@@ -178,6 +179,7 @@ def moveToBlob(color):
                 onColor = 1
 
 stopped = 0
+k = 0
 while stopped == 0:
     user_choice = raw_input("Please put color choice here. 1 = red, 2 = green, 3 = blue, 4 = yellow, 'Rand' = random, or type 'Stop' to stop")
     if user_choice == "Stop":
@@ -187,10 +189,20 @@ while stopped == 0:
     else:
         int_choice = int(user_choice)
     
-    p = (230,50)
-    text = Text(p, "Searching for: " + user_choice + " blob.") 
+    p = (230,30*(k+1))
+    k+=1
+    blob = "null"
+    if int_choice == 1:
+        blob = "red"
+    if int_choice == 2:
+        blob = "green"
+    if int_choice == 3:
+        blob = "blue"
+    if int_choice == 4:
+        blob = "yellow"
+    text = Text(p, "Searching for: " + blob + " blob.") 
     #sim.remove(text)
-    sim.addText(text)
+    text.draw(win)
     
     moveToBlob(int_choice)
 
