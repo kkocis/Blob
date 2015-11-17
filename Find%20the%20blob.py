@@ -137,8 +137,10 @@ def moveToBlob(color):
             print(avg)
             if (avg == -1): #if avg=-1, robot is touching the blob
                 onColor = 1
+                
 
-    if onColor == 1:
+    if onColor == 1: #I think theres a problem with the onColor function (I don't thing findColorSpot is ever reaching -1, which could be the problem)
+        stop()
         speak('blob found.')
 
 user_choice = raw_input("Please put color choice here. 1 = red, 2 = green, 3 = blue, 4 = yellow.")
