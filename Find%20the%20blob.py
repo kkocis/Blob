@@ -6,6 +6,7 @@ from random import *
 width = 500
 height = 500
 sim = Simulation("Maze World", width, height, Color("gray"))
+win = Window("My Window", 500, 400)
 
 #outside walls
 sim.addWall((10, 10), (490, 20), Color("black"))
@@ -111,7 +112,6 @@ def moveToBlob(color):
         
         turnBy(45)
         pic = takePicture()
-        #show(pic)
         
         avg = findColorSpot(pic, color)
         print(findColorSpot(pic, color))
@@ -124,7 +124,7 @@ def moveToBlob(color):
        #resolves problem that if robot is too far from a blob it won't locate it
         a+=1
         if (a == 8): # If spins around fully and does not find block, start searching.
-            turnBy(180)
+            turnBy(180) #robot turns and moves with larger movements in order to locate an elusive blob
             forward(1,3)
             pic = takePicture()
             avg = findColorSpot(pic, color)
@@ -133,9 +133,9 @@ def moveToBlob(color):
                 colorFound =1  #when the desired colored pictures in the field of view, set color found to 1
             else:
                 colorFound = 0
-            while avg == 0: 
+            while avg == 0: #if the robot is not finding the blob
                 b = 0
-                turnBy(randrange(-1,2)*30)
+                turnBy(randrange(-1,2)*30) #turn by random number, move random number
                 forward (randrange(-1,2),randrange(0, 3))
                 pic = takePicture()
                 avg = findColorSpot(pic, color)
@@ -174,22 +174,32 @@ def moveToBlob(color):
             if (avg == -1): #if avg=-1, robot is touching the blob
                 onColor = 1
 
-stopped = 0
-while stopped == 0:
+stopped = 0 
+k = 0   #variable for the location of the text in window
+while stopped == 0: #Before the robot moves, or after it finds a blob
     user_choice = raw_input("Please put color choice here. 1 = red, 2 = green, 3 = blue, 4 = yellow, 'rand' or 'r' = random, or type 'stop' to stop")
-    if user_choice == "stop":
-        stopped = 1
+    if user_choice == "stop":   #user selects inputs what they want the robot to do
+        stopped = 1 #stops the robot's motion
     elif user_choice == "Rand" or "r":
-        int_choice =randrange(1, 4)
+        int_choice =randrange(1, 4)    #robot will search for a random blob
     else:
-        int_choice = int(user_choice)
+        int_choice = int(user_choice)  #robot will search for a specific colored blob
     
-    p = (230,50)
-    text = Text(p, "Searching for: " + user_choice + " blob.") 
-    #sim.remove(text)
-    sim.addShape(text)
+    p = (230,30*(k+1))#changes where the text will be printed in the new window
+    k+=1    #moves text down with each successive selection of color
+    blob = "null" #translates the user_choice from a number to the corresponding word for the desired color
+    if int_choice == 1:
+        blob = "red"
+    if int_choice == 2:
+        blob = "green"
+    if int_choice == 3:
+        blob = "blue"
+    if int_choice == 4:
+        blob = "yellow"
+    text = Text(p, "Searching for: " + blob + " blob.") #defines that the text printed is "searching for __ blob."
+    text.draw(win) #writes the above text in a new window
     
-    moveToBlob(int_choice)
+    moveToBlob(int_choice) #runs the find the blob function for the inputed color
 
 
 
