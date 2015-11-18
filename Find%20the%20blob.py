@@ -120,6 +120,8 @@ def moveToBlob(color):
         else:
             colorFound = 0
             
+       #if robot completes a full circle without finding the blob, start searching randomly
+       #resolves problem that if robot is too far from a blob it won't locate it
         a+=1
         if (a == 8): # If spins around fully and does not find block, start searching.
             turnBy(180)
@@ -146,7 +148,6 @@ def moveToBlob(color):
                 if b == 12:
                     forward(1,1)
                     b = 0
-            
             a=0
 
     colorCenter = 0
@@ -186,7 +187,7 @@ while stopped == 0:
     p = (230,50)
     text = Text(p, "Searching for: " + user_choice + " blob.") 
     #sim.remove(text)
-    sim.addText(text)
+    sim.addShape(text)
     
     moveToBlob(int_choice)
 
