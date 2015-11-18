@@ -180,11 +180,11 @@ while stopped == 0: #Before the robot moves, or after it finds a blob
     user_choice = raw_input("Please put color choice here. 1 = red, 2 = green, 3 = blue, 4 = yellow, 'rand' or 'r' = random, or type 'stop' to stop")
     if user_choice == "stop":   #user selects inputs what they want the robot to do
         stopped = 1 #stops the robot's motion
-    elif user_choice == "Rand" or "r":
+    elif user_choice == "rand" or user_choice == "r":
         int_choice =randrange(1, 4)    #robot will search for a random blob
     else:
         int_choice = int(user_choice)  #robot will search for a specific colored blob
-    
+    print(user_choice)
     p = (230,30*(k+1))#changes where the text will be printed in the new window
     k+=1    #moves text down with each successive selection of color
     blob = "null" #translates the user_choice from a number to the corresponding word for the desired color
